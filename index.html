@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADEL UZ — Опрос</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1a;
+    --surface: #111827;
+    --card: #151e2e;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #00ff88;
+    --text: #e8f0fe;
+    --muted: #6b7a99;
+    --border: rgba(0,212,255,0.15);
+    --radius: 12px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BG */
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 { background: rgba(0,212,255,0.06); top:-100px; right:-100px; }
+  .glow-2 { background: rgba(255,107,53,0.05); bottom:-100px; left:-100px; }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 48px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  }
+  .header-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 80px);
+    letter-spacing: 4px;
+    line-height: 0.9;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 24px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .meta-item span { color: var(--muted); }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 99px;
+    height: 4px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    margin-bottom: 8px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 12px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--accent)15, transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .section-header:hover { background: linear-gradient(135deg, var(--accent)25, transparent); }
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 36px;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+    flex: 1;
+  }
+  .section-chevron {
+    font-size: 18px;
+    color: var(--accent);
+    transition: transform 0.3s;
+  }
+  .section-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+  }
+  .section-body.open { max-height: 5000px; }
+  .section-inner { padding: 8px 0 16px; }
+
+  /* QUESTIONS */
+  .question {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .question:last-child { border-bottom: none; }
+  .question:hover { background: rgba(0,212,255,0.02); }
+  .question.required .q-label::after {
+    content: ' *';
+    color: var(--accent2);
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .q-label {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .q-hint {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .option:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.05);
+    color: #fff;
+  }
+  .option.selected {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.12);
+    color: #fff;
+  }
+  .option input { display:none; }
+  .option-dot {
+    width: 16px; height: 16px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .option.selected .option-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .option-dot::after {
+    content:'';
+    width: 6px; height: 6px;
+    background: var(--bg);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .option.selected .option-dot::after { opacity: 1; }
+
+  /* Checkbox style */
+  .option.checkbox .option-dot { border-radius: 4px; }
+  .option.checkbox.selected .option-dot::after {
+    content: '✓';
+    font-size: 10px;
+    opacity: 1;
+    background: transparent;
+    color: var(--bg);
+    font-weight: bold;
+  }
+
+  /* GRID OPTIONS */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+
+  /* RATING */
+  .rating-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rating-table th {
+    padding: 8px 6px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+  .rating-table th:first-child { text-align: left; }
+  .rating-table td {
+    padding: 10px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    text-align: center;
+    vertical-align: middle;
+  }
+  .rating-table td:first-child { text-align: left; font-size: 13px; color: var(--muted); padding-left: 0; }
+  .rating-table tr:hover td { background: rgba(0,212,255,0.02); }
+  .r-btn {
+    width: 28px; height: 28px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+  .r-btn:hover, .r-btn.active {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.15);
+    color: var(--accent);
+  }
+
+  /* TEXT INPUT */
+  .text-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  .text-input:focus { border-color: var(--accent); }
+  .text-input::placeholder { color: var(--muted); }
+
+  /* SUBMIT */
+  .submit-section {
+    margin-top: 40px;
+    padding: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    text-align: center;
+  }
+  .submit-btn {
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 320px;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.3); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+  /* GOOGLE FORMS EXPORT */
+  .export-section {
+    margin-top: 32px;
+    padding: 24px;
+    background: rgba(0,212,255,0.04);
+    border: 1px dashed rgba(0,212,255,0.3);
+    border-radius: var(--radius);
+  }
+  .export-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .export-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .copy-btn {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .copy-btn:hover { background: rgba(0,212,255,0.2); }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin-top: 24px;
+  }
+  .success-icon { font-size: 64px; margin-bottom: 20px; }
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--accent3);
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+  .success-text { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .rating-table { font-size: 11px; }
+    .r-btn { width: 24px; height: 24px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-tag">🎾 Исследование рынка</div>
+    <h1>PADEL UZ<br>ОПРОС</h1>
+    <p>Первый крытый падел-центр в Ташкенте. Ваше мнение поможет нам создать лучший спорт-центр — для вас.</p>
+    <div class="header-meta">
+      <div class="meta-item">⏱ <span>5–7 минут</span></div>
+      <div class="meta-item">📍 <span>Ташкент</span></div>
+      <div class="meta-item">🔒 <span>Анонимно</span></div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-label" id="progressLabel">Пройдено: 0 из 22 вопросов</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <form id="surveyForm">
+
+    <!-- ═══ РАЗДЕЛ 1 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">01</div>
+        <div class="section-title">О вас</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question required" data-q="1">
+          <div class="q-num">В.01</div>
+          <div class="q-label">Ваш возраст</div>
+          <div class="options" data-type="radio" data-name="age">
+            <label class="option"><input type="radio" name="age" value="до18"><div class="option-dot"></div>До 18 лет</label>
+            <label class="option"><input type="radio" name="age" value="18-25"><div class="option-dot"></div>18–25 лет</label>
+            <label class="option"><input type="radio" name="age" value="26-35"><div class="option-dot"></div>26–35 лет</label>
+            <label class="option"><input type="radio" name="age" value="36-45"><div class="option-dot"></div>36–45 лет</label>
+            <label class="option"><input type="radio" name="age" value="46-55"><div class="option-dot"></div>46–55 лет</label>
+            <label class="option"><input type="radio" name="age" value="55+"><div class="option-dot"></div>Старше 55</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="2">
+          <div class="q-num">В.02</div>
+          <div class="q-label">Район проживания в Ташкенте</div>
+          <div class="options options-grid" data-type="radio" data-name="district">
+            <label class="option"><input type="radio" name="district" value="yunusabad"><div class="option-dot"></div>Юнусабадский</label>
+            <label class="option"><input type="radio" name="district" value="mirzo"><div class="option-dot"></div>Мирзо-Улугбекский</label>
+            <label class="option"><input type="radio" name="district" value="yakkasar"><div class="option-dot"></div>Яккасарайский</label>
+            <label class="option"><input type="radio" name="district" value="chilanzar"><div class="option-dot"></div>Чиланзарский</label>
+            <label class="option"><input type="radio" name="district" value="sergeli"><div class="option-dot"></div>Сергелийский</label>
+            <label class="option"><input type="radio" name="district" value="other"><div class="option-dot"></div>Другой</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="3">
+          <div class="q-num">В.03</div>
+          <div class="q-label">Вы занимаетесь спортом?</div>
+          <div class="options" data-type="radio" data-name="sport_freq">
+            <label class="option"><input type="radio" name="sport_freq" value="regular"><div class="option-dot"></div>Да, регулярно (2+ раза в неделю)</label>
+            <label class="option"><input type="radio" name="sport_freq" value="sometimes"><div class="option-dot"></div>Иногда (раз в неделю или реже)</label>
+            <label class="option"><input type="radio" name="sport_freq" value="rarely"><div class="option-dot"></div>Почти не занимаюсь</label>
+            <label class="option"><input type="radio" name="sport_freq" value="no"><div class="option-dot"></div>Совсем не занимаюсь</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="4">
+          <div class="q-num">В.04</div>
+          <div class="q-label">Какими видами спорта занимаетесь? <small style="color:var(--muted);font-weight:300">(можно несколько)</small></div>
+          <div class="options options-grid" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="sports" value="tennis"><div class="option-dot"></div>Теннис</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="badminton"><div class="option-dot"></div>Бадминтон</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="squash"><div class="option-dot"></div>Сквош</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="football"><div class="option-dot"></div>Футбол / футзал</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="fitness"><div class="option-dot"></div>Фитнес / тренажёрный зал</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="running"><div class="option-dot"></div>Бег / велоспорт</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="swimming"><div class="option-dot"></div>Плавание</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="other"><div class="option-dot"></div>Другое</label>
+            <label class="option checkbox"><input type="checkbox" name="sports" value="none"><div class="option-dot"></div>Не занимаюсь</label>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ═══ РАЗДЕЛ 2 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">02</div>
+        <div class="section-title">Крытые корты — ваше мнение</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question required" data-q="5">
+          <div class="q-num">В.05 ⭐ Ключевой</div>
+          <div class="q-label">Вы сталкивались с проблемами при занятии спортом на открытых площадках?</div>
+          <div class="options" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="heat"><div class="option-dot"></div>☀️ Жара летом (40°C+) — невозможно играть</label>
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="cold"><div class="option-dot"></div>❄️ Зимой холодно</label>
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="wind"><div class="option-dot"></div>💨 Ветер и пыль мешают</label>
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="rain"><div class="option-dot"></div>🌧️ Дождь срывает тренировки</label>
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="no_light"><div class="option-dot"></div>🌑 Нет освещения вечером</label>
+            <label class="option checkbox"><input type="checkbox" name="outdoor_prob" value="none"><div class="option-dot"></div>Проблем не было</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="6">
+          <div class="q-num">В.06 ⭐ Ключевой</div>
+          <div class="q-label">Если бы в Ташкенте был крытый корт (климат-контроль, нет пыли, нет погоды) — вы бы занимались спортом чаще?</div>
+          <div class="options" data-type="radio" data-name="indoor_more">
+            <label class="option"><input type="radio" name="indoor_more" value="yes_a_lot"><div class="option-dot"></div>Да, значительно чаще</label>
+            <label class="option"><input type="radio" name="indoor_more" value="yes_bit"><div class="option-dot"></div>Да, немного чаще</label>
+            <label class="option"><input type="radio" name="indoor_more" value="no_matter"><div class="option-dot"></div>Нет, мне это не важно</label>
+            <label class="option"><input type="radio" name="indoor_more" value="no_sport"><div class="option-dot"></div>Не занимаюсь спортом</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="7">
+          <div class="q-num">В.07</div>
+          <div class="q-label">Что ГЛАВНОЕ преимущество крытого корта для вас? <small style="color:var(--muted);font-weight:300">(до 2 ответов)</small></div>
+          <div class="options" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="weather"><div class="option-dot"></div>Играть в любую погоду круглый год</label>
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="no_heat"><div class="option-dot"></div>Нет жары и прямого солнца</label>
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="no_dust"><div class="option-dot"></div>Нет пыли — легче дышать</label>
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="light"><div class="option-dot"></div>Стабильное освещение вечером</label>
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="facilities"><div class="option-dot"></div>Комфортные раздевалки и душ</label>
+            <label class="option checkbox"><input type="checkbox" name="indoor_adv" value="surface"><div class="option-dot"></div>Профессиональное покрытие</label>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ═══ РАЗДЕЛ 3 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">03</div>
+        <div class="section-title">Падел-теннис</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question required" data-q="8">
+          <div class="q-num">В.08</div>
+          <div class="q-label">Вы слышали о падел-теннисе?</div>
+          <div class="options" data-type="radio" data-name="padel_know">
+            <label class="option"><input type="radio" name="padel_know" value="played"><div class="option-dot"></div>🎾 Да, играл(а) сам(а)</label>
+            <label class="option"><input type="radio" name="padel_know" value="seen"><div class="option-dot"></div>👀 Да, видел(а) / читал(а)</label>
+            <label class="option"><input type="radio" name="padel_know" value="name"><div class="option-dot"></div>🔤 Слышал(а) название</label>
+            <label class="option"><input type="radio" name="padel_know" value="no"><div class="option-dot"></div>❓ Нет, первый раз</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="9">
+          <div class="q-num">В.09 ⭐ Ключевой</div>
+          <div class="q-label">Хотели бы попробовать падел-теннис?</div>
+          <div class="q-hint">Падел — ракетный спорт, играют 4 человека в закрытом корте со стеклянными стенами. Легко учиться, очень динамично.</div>
+          <div class="options" data-type="radio" data-name="padel_try">
+            <label class="option"><input type="radio" name="padel_try" value="yes_eager"><div class="option-dot"></div>🔥 Да, очень хочу попробовать</label>
+            <label class="option"><input type="radio" name="padel_try" value="yes"><div class="option-dot"></div>✅ Да, интересно</label>
+            <label class="option"><input type="radio" name="padel_try" value="maybe"><div class="option-dot"></div>🤔 Возможно</label>
+            <label class="option"><input type="radio" name="padel_try" value="no"><div class="option-dot"></div>Скорее нет / Нет</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="10">
+          <div class="q-num">В.10</div>
+          <div class="q-label">Что привлекает в падел? <small style="color:var(--muted);font-weight:300">(можно несколько)</small></div>
+          <div class="options" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="easy"><div class="option-dot"></div>Легко научиться без опыта</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="social"><div class="option-dot"></div>Играют 4 человека — весело в компании</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="short"><div class="option-dot"></div>Короткая динамичная игра (1–1.5 часа)</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="new"><div class="option-dot"></div>Хочу быть первым(ой) в Ташкенте</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="fitness"><div class="option-dot"></div>Хорошая физическая нагрузка</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_pros" value="nothing"><div class="option-dot"></div>Ничего не привлекает</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="11">
+          <div class="q-num">В.11</div>
+          <div class="q-label">Что смущает или останавливает?</div>
+          <div class="options" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="padel_cons" value="no_rules"><div class="option-dot"></div>Не знаю правил</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_cons" value="no_friends"><div class="option-dot"></div>Нет друзей, с кем играть</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_cons" value="expensive"><div class="option-dot"></div>Кажется дорого</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_cons" value="no_place"><div class="option-dot"></div>Не знаю где играть</label>
+            <label class="option checkbox"><input type="checkbox" name="padel_cons" value="nothing"><div class="option-dot"></div>Ничего — готов(а) начать!</label>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ═══ РАЗДЕЛ 4 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">04</div>
+        <div class="section-title">Цена и форматы</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question required" data-q="12">
+          <div class="q-num">В.12</div>
+          <div class="q-label">Сколько вы тратите в месяц на спорт / фитнес?</div>
+          <div class="options" data-type="radio" data-name="sport_spend">
+            <label class="option"><input type="radio" name="sport_spend" value="0"><div class="option-dot"></div>0 — не трачу</label>
+            <label class="option"><input type="radio" name="sport_spend" value="to150"><div class="option-dot"></div>До 150 000 сум</label>
+            <label class="option"><input type="radio" name="sport_spend" value="150-400"><div class="option-dot"></div>150 000 – 400 000 сум</label>
+            <label class="option"><input type="radio" name="sport_spend" value="400-700"><div class="option-dot"></div>400 000 – 700 000 сум</label>
+            <label class="option"><input type="radio" name="sport_spend" value="700-1200"><div class="option-dot"></div>700 000 – 1 200 000 сум</label>
+            <label class="option"><input type="radio" name="sport_spend" value="1200+"><div class="option-dot"></div>Больше 1 200 000 сум</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="13">
+          <div class="q-num">В.13 ⭐ Ключевой</div>
+          <div class="q-label">Аренда корта — 600 000 сум/час на 4 игрока (150 000 сум с человека). Ваша оценка:</div>
+          <div class="options" data-type="radio" data-name="price_react">
+            <label class="option"><input type="radio" name="price_react" value="very_cheap"><div class="option-dot"></div>💚 Очень доступно</label>
+            <label class="option"><input type="radio" name="price_react" value="ok"><div class="option-dot"></div>✅ Нормально</label>
+            <label class="option"><input type="radio" name="price_react" value="bit_exp"><div class="option-dot"></div>🟡 Немного дорого</label>
+            <label class="option"><input type="radio" name="price_react" value="expensive"><div class="option-dot"></div>🔴 Дорого</label>
+            <label class="option"><input type="radio" name="price_react" value="too_exp"><div class="option-dot"></div>🚫 Слишком дорого</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="14">
+          <div class="q-num">В.14</div>
+          <div class="q-label">Какую цену на человека в час вы считаете справедливой?</div>
+          <div class="options" data-type="radio" data-name="fair_price">
+            <label class="option"><input type="radio" name="fair_price" value="to80"><div class="option-dot"></div>До 80 000 сум</label>
+            <label class="option"><input type="radio" name="fair_price" value="80-130"><div class="option-dot"></div>80 000 – 130 000 сум</label>
+            <label class="option"><input type="radio" name="fair_price" value="130-200"><div class="option-dot"></div>130 000 – 200 000 сум</label>
+            <label class="option"><input type="radio" name="fair_price" value="200-250"><div class="option-dot"></div>200 000 – 250 000 сум</label>
+            <label class="option"><input type="radio" name="fair_price" value="250+"><div class="option-dot"></div>Больше 250 000 — если высокое качество</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="15">
+          <div class="q-num">В.15</div>
+          <div class="q-label">Удобный формат оплаты?</div>
+          <div class="options" data-type="checkbox">
+            <label class="option checkbox"><input type="checkbox" name="payment" value="single"><div class="option-dot"></div>Разовое посещение</label>
+            <label class="option checkbox"><input type="checkbox" name="payment" value="pack"><div class="option-dot"></div>Пакет 5–10 часов (скидка 10–15%)</label>
+            <label class="option checkbox"><input type="checkbox" name="payment" value="monthly"><div class="option-dot"></div>Месячный абонемент</label>
+            <label class="option checkbox"><input type="checkbox" name="payment" value="installment"><div class="option-dot"></div>Рассрочка на год</label>
+            <label class="option checkbox"><input type="checkbox" name="payment" value="corporate"><div class="option-dot"></div>Корпоративный пакет от работодателя</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="16">
+          <div class="q-num">В.16</div>
+          <div class="q-label">Нужны тренировки с тренером?</div>
+          <div class="options" data-type="radio" data-name="coach">
+            <label class="option"><input type="radio" name="coach" value="individual"><div class="option-dot"></div>Да — индивидуальный урок (300 000 сум/час)</label>
+            <label class="option"><input type="radio" name="coach" value="group"><div class="option-dot"></div>Да — групповое занятие (150 000 сум/чел)</label>
+            <label class="option"><input type="radio" name="coach" value="start_only"><div class="option-dot"></div>Только в начале (2–3 урока)</label>
+            <label class="option"><input type="radio" name="coach" value="no"><div class="option-dot"></div>Нет, буду учиться сам(а)</label>
+          </div>
+        </div>
+
+        <div class="question" data-q="17">
+          <div class="q-num">В.17</div>
+          <div class="q-label">Будете арендовать ракетку в клубе?</div>
+          <div class="options" data-type="radio" data-name="racket_rent">
+            <label class="option"><input type="radio" name="racket_rent" value="yes_temp"><div class="option-dot"></div>Да, пока не куплю свою</label>
+            <label class="option"><input type="radio" name="racket_rent" value="yes_always"><div class="option-dot"></div>Да, всегда удобнее арендовать</label>
+            <label class="option"><input type="radio" name="racket_rent" value="no_buy"><div class="option-dot"></div>Нет, сразу куплю ракетку</label>
+            <label class="option"><input type="radio" name="racket_rent" value="depends"><div class="option-dot"></div>Зависит от цены проката</label>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ═══ РАЗДЕЛ 5 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">05</div>
+        <div class="section-title">Сервис и важность</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question" data-q="18">
+          <div class="q-num">В.18</div>
+          <div class="q-label">Оцените важность каждого элемента (1 — не важно, 5 — очень важно):</div>
+          <div style="overflow-x:auto; margin-top:12px;">
+          <table class="rating-table" id="ratingTable">
+            <thead>
+              <tr>
+                <th style="min-width:200px">Элемент</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5 ★</th>
+              </tr>
+            </thead>
+            <tbody id="ratingBody"></tbody>
+          </table>
+          </div>
+        </div>
+
+        <div class="question required" data-q="19">
+          <div class="q-num">В.19</div>
+          <div class="q-label">Удобный район для падел-центра?</div>
+          <div class="options options-grid" data-type="radio" data-name="location">
+            <label class="option"><input type="radio" name="location" value="yunusabad"><div class="option-dot"></div>Юнусабад / Мирзо-Улугбек</label>
+            <label class="option"><input type="radio" name="location" value="center"><div class="option-dot"></div>Центр (Яккасарай)</label>
+            <label class="option"><input type="radio" name="location" value="chilanzar"><div class="option-dot"></div>Чиланзар</label>
+            <label class="option"><input type="radio" name="location" value="sergeli"><div class="option-dot"></div>Сергели / Новый Ташкент</label>
+            <label class="option"><input type="radio" name="location" value="any"><div class="option-dot"></div>Любой — главное качество</label>
+          </div>
+        </div>
+
+        <div class="question required" data-q="20">
+          <div class="q-num">В.20 ⭐ Ключевой</div>
+          <div class="q-label">Вы бы купили абонемент ДО открытия центра по специальной цене (скидка 30%)?</div>
+          <div class="options" data-type="radio" data-name="preorder">
+            <label class="option"><input type="radio" name="preorder" value="yes"><div class="option-dot"></div>🔥 Да, хочу скидку — готов(а) оплатить заранее</label>
+            <label class="option"><input type="radio" name="preorder" value="maybe"><div class="option-dot"></div>🤔 Возможно, нужно подумать</label>
+            <label class="option"><input type="radio" name="preorder" value="after"><div class="option-dot"></div>Нет, хочу сначала попробовать</label>
+            <label class="option"><input type="radio" name="preorder" value="no"><div class="option-dot"></div>Нет</label>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ═══ РАЗДЕЛ 6 ═══ -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-num">06</div>
+        <div class="section-title">Ваши контакты и пожелания</div>
+        <div class="section-chevron">▾</div>
+      </div>
+      <div class="section-body open"><div class="section-inner">
+
+        <div class="question" data-q="21">
+          <div class="q-num">В.21</div>
+          <div class="q-label">Оставьте контакт — пришлём персональное предложение при открытии 🎁</div>
+          <div class="q-hint">Первым 100 подписавшимся — скидка 25% на первый месяц.</div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+            <input class="text-input" type="text" name="contact_name" placeholder="Имя">
+            <input class="text-input" type="text" name="contact_phone" placeholder="Телефон или Telegram (@username)">
+          </div>
+        </div>
+
+        <div class="question" data-q="22">
+          <div class="q-num">В.22</div>
+          <div class="q-label">Есть что-то важное, что мы не спросили? Пожелания, идеи:</div>
+          <textarea class="text-input" name="comment" rows="3" placeholder="Ваши мысли очень важны для нас..."></textarea>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:16px; letter-spacing:1px;">ГОТОВО? ОТПРАВЛЯЙТЕ 🚀</div>
+      <button type="submit" class="submit-btn">ОТПРАВИТЬ ОТВЕТЫ</button>
+      <div class="submit-note">Ваши ответы помогут создать лучший падел-центр в Ташкенте</div>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">🎾</div>
+    <div class="success-title">СПАСИБО!</div>
+    <div class="success-text">
+      Ваши ответы получены.<br>
+      Мы уведомим вас об открытии первого крытого падел-центра в Ташкенте.<br><br>
+      <strong style="color:var(--accent)">Следите за нами в Instagram: @padel.uz</strong>
+    </div>
+  </div>
+
+  <!-- EXPORT SECTION -->
+  <div class="export-section" style="margin-top:40px;">
+    <div class="export-title">📋 Как перенести в Google Forms</div>
+    <div class="export-text">
+      Этот опросник полностью готов к использованию прямо здесь. Чтобы перенести в Google Forms:
+      <br>1. Откройте <strong>forms.google.com</strong> → создайте новую форму
+      <br>2. Скопируйте вопросы по блокам (кнопка ниже)
+      <br>3. Для каждого вопроса выберите тип: <em>«Один вариант»</em> (radio) или <em>«Несколько»</em> (checkbox)
+      <br>4. После создания — получите ссылку и QR-код через «Отправить форму»
+    </div>
+    <button class="copy-btn" onclick="copyQuestions()">📄 Скопировать все вопросы</button>
+    <button class="copy-btn" onclick="window.print()">🖨️ Распечатать анкету</button>
+    <div id="copyMsg" style="font-size:12px;color:var(--accent3);margin-top:8px;display:none;">✓ Вопросы скопированы в буфер обмена!</div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── Rating table ──────────────────────────────────────────────────────
+const ratingItems = [
+  "Качество покрытия кортов",
+  "Климат-контроль (кондиционер / обогрев)",
+  "Удобные раздевалки и душ",
+  "Онлайн-бронирование через приложение",
+  "Кафе / бар в клубе",
+  "Магазин ракеток и инвентаря",
+  "Рейтинг и турниры внутри клуба",
+  "Мониторы с рейтингом в реальном времени",
+  "Тренер / школа для начинающих",
+  "Прокат ракеток и мячей",
+  "Парковка",
+  "Сертификат Федерации / официальный статус"
+];
+
+const tbody = document.getElementById('ratingBody');
+ratingItems.forEach((item, idx) => {
+  const tr = document.createElement('tr');
+  let html = `<td>${item}</td>`;
+  for (let i = 1; i <= 5; i++) {
+    html += `<td><button type="button" class="r-btn" data-row="${idx}" data-val="${i}" onclick="setRating(this,${idx},${i})">${i}</button></td>`;
+  }
+  tr.innerHTML = html;
+  tbody.appendChild(tr);
+});
+
+function setRating(btn, row, val) {
+  document.querySelectorAll(`.r-btn[data-row="${row}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateProgress();
+}
+
+// ── Option click ──────────────────────────────────────────────────────
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const input = this.querySelector('input');
+    if (!input) return;
+    if (input.type === 'radio') {
+      const name = input.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.option').classList.remove('selected');
+      });
+      input.checked = true;
+      this.classList.add('selected');
+    } else {
+      input.checked = !input.checked;
+      this.classList.toggle('selected', input.checked);
+    }
+    updateProgress();
+  });
+});
+
+// ── Progress ──────────────────────────────────────────────────────────
+const TOTAL = 22;
+function countAnswered() {
+  const answered = new Set();
+  document.querySelectorAll('input[type="radio"]:checked').forEach(i => answered.add(i.name));
+  ['outdoor_prob','sports','padel_pros','padel_cons','indoor_adv','payment'].forEach(n => {
+    if (document.querySelector(`input[name="${n}"]:checked`)) answered.add(n);
+  });
+  document.querySelectorAll('.r-btn.active').forEach(b => answered.add('rating_' + b.dataset.row));
+  if (document.querySelector('input[name="contact_name"]')?.value) answered.add('contact');
+  return answered.size;
+}
+function updateProgress() {
+  const n = Math.min(countAnswered(), TOTAL);
+  const pct = Math.round(n / TOTAL * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Пройдено: ${n} из ${TOTAL} вопросов`;
+}
+document.querySelectorAll('.text-input').forEach(i => i.addEventListener('input', updateProgress));
+
+// ── Section toggle ────────────────────────────────────────────────────
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.section-chevron');
+  const isOpen = body.classList.toggle('open');
+  chevron.style.transform = isOpen ? '' : 'rotate(-90deg)';
+}
+
+// ── Submit → Google Sheets ────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySrf5JH0NyF2dWvpnMYWw9wJNXdEFddDBdXnsaqVvgDeCOcXWkBg5k0uJDPqD0RgoTAQ/exec';
+
+document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'ОТПРАВЛЯЕМ...';
+  btn.disabled = true;
+
+  // Собираем все ответы
+  function getRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  }
+  function getCheckboxes(name) {
+    return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value);
+  }
+
+  // Рейтинги
+  const ratings = {};
+  document.querySelectorAll('.r-btn.active').forEach(b => {
+    ratings[b.dataset.row] = b.dataset.val;
+  });
+  const ratingsStr = Object.entries(ratings).map(([k,v]) => `${ratingItems[k]}: ${v}`).join(' | ');
+
+  const payload = {
+    age:          getRadio('age'),
+    district:     getRadio('district'),
+    sport_freq:   getRadio('sport_freq'),
+    sports:       getCheckboxes('sports'),
+    outdoor_prob: getCheckboxes('outdoor_prob'),
+    indoor_more:  getRadio('indoor_more'),
+    indoor_adv:   getCheckboxes('indoor_adv'),
+    padel_know:   getRadio('padel_know'),
+    padel_try:    getRadio('padel_try'),
+    padel_pros:   getCheckboxes('padel_pros'),
+    padel_cons:   getCheckboxes('padel_cons'),
+    sport_spend:  getRadio('sport_spend'),
+    price_react:  getRadio('price_react'),
+    fair_price:   getRadio('fair_price'),
+    payment:      getCheckboxes('payment'),
+    coach:        getRadio('coach'),
+    racket_rent:  getRadio('racket_rent'),
+    ratings:      ratingsStr,
+    location:     getRadio('location'),
+    preorder:     getRadio('preorder'),
+    contact_name: document.querySelector('input[name="contact_name"]').value,
+    contact_phone:document.querySelector('input[name="contact_phone"]').value,
+    comment:      document.querySelector('textarea[name="comment"]').value,
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // Успех
+    document.getElementById('surveyForm').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('successScreen').scrollIntoView({ behavior: 'smooth' });
+
+  } catch(err) {
+    btn.textContent = 'ОТПРАВИТЬ ОТВЕТЫ';
+    btn.disabled = false;
+    alert('Ошибка отправки. Проверьте интернет и попробуйте ещё раз.');
+  }
+});
+
+// ── Copy questions ────────────────────────────────────────────────────
+function copyQuestions() {
+  const questions = `PADEL UZ — ОПРОСНИК (для Google Forms)
+=====================================
+
+РАЗДЕЛ 1 — О ВАС
+В.01. Ваш возраст (Один вариант): До 18 / 18-25 / 26-35 / 36-45 / 46-55 / Старше 55
+В.02. Район проживания (Один вариант): Юнусабадский / Мирзо-Улугбекский / Яккасарайский / Чиланзарский / Сергелийский / Другой
+В.03. Вы занимаетесь спортом? (Один): Регулярно / Иногда / Почти нет / Нет
+В.04. Какими видами спорта? (Несколько): Теннис / Бадминтон / Сквош / Футбол / Фитнес / Бег / Плавание / Другое / Не занимаюсь
+
+РАЗДЕЛ 2 — КРЫТЫЕ КОРТЫ
+В.05. ⭐ Проблемы на открытых площадках? (Несколько): Жара летом / Холод зимой / Ветер и пыль / Дождь / Нет освещения вечером / Проблем нет
+В.06. ⭐ Занимались бы чаще при наличии крытого корта? (Один): Да, значительно / Да, немного / Не важно / Не занимаюсь
+В.07. Главное преимущество крытого корта? (до 2): Любая погода / Нет жары / Нет пыли / Освещение / Раздевалки / Покрытие
+
+РАЗДЕЛ 3 — ПАДЕЛ-ТЕННИС
+В.08. Слышали о падел-теннисе? (Один): Играл сам / Видел/читал / Слышал название / Первый раз
+В.09. ⭐ Хотели бы попробовать? (Один): Очень хочу / Интересно / Возможно / Нет
+В.10. Что привлекает? (Несколько): Легко учиться / Игра вчетвером / Короткая игра / Быть первым в ТШ / Нагрузка / Ничего
+В.11. Что останавливает? (Несколько): Не знаю правил / Нет с кем играть / Дорого / Не знаю где / Ничего
+
+РАЗДЕЛ 4 — ЦЕНА
+В.12. Расходы на спорт/мес (Один): 0 / до 150К / 150-400К / 400-700К / 700К-1.2М / 1.2М+
+В.13. ⭐ Оценка цены 600 000 сум/час (Один): Очень доступно / Нормально / Немного дорого / Дорого / Слишком дорого
+В.14. Справедливая цена на чел/час (Один): до 80К / 80-130К / 130-200К / 200-250К / 250К+ если качество
+В.15. Формат оплаты (Несколько): Разовое / Пакет часов / Месячный / Рассрочка / Корпоративный
+В.16. Нужен тренер? (Один): Индивидуальный / Групповой / Только в начале / Нет
+В.17. Аренда ракетки? (Один): Да временно / Всегда арендую / Сразу куплю / Зависит от цены
+
+РАЗДЕЛ 5 — СЕРВИС
+В.18. Оцените важность (1-5): Покрытие / Климат-контроль / Раздевалки / Онлайн-бронь / Кафе / Магазин / Рейтинги / Мониторы / Тренер / Прокат / Парковка / Сертификат
+В.19. Удобный район (Один): Юнусабад / Центр / Чиланзар / Сергели / Любой
+В.20. ⭐ Абонемент до открытия со скидкой 30%? (Один): Да / Возможно / После открытия / Нет
+
+РАЗДЕЛ 6 — КОНТАКТЫ
+В.21. Имя + Телефон/Telegram (Краткий ответ)
+В.22. Пожелания и идеи (Абзац)`;
+
+  navigator.clipboard.writeText(questions).then(() => {
+    document.getElementById('copyMsg').style.display = 'block';
+    setTimeout(() => document.getElementById('copyMsg').style.display = 'none', 3000);
+  });
+}
+</script>
+</body>
+</html>
